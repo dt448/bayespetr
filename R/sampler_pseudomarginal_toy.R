@@ -23,11 +23,11 @@ nodeWisePMHSamplerToyRcpp <- function(imageData,
                                                            numDistrbtns = 500),
                                       priorSigma = 5, likeSigma = 1
 ){
-  cat("\n smcParameters:", smcParameters$numSamples)
+  # cat("\n smcParameters:", smcParameters$numSamples)
   n = dim(imageData)[1]
   m = dim(imageData)[2]
 
-  cat("n:", n, "m:", m)
+  # cat("n:", n, "m:", m)
 
   currModelOrderMatrix = pottsGibbsSampler(numIteration = 10,n = n,m = m,J = J,stateSpace = pottsStateSpace)
 
@@ -41,14 +41,14 @@ nodeWisePMHSamplerToyRcpp <- function(imageData,
   # singleMarginalEstimateMatrix = array(NA,c(n,m,2))
 
 
-  cat("\n Computing marginal likelihoods using smc...")
+  # cat("\n Computing marginal likelihoods using smc...")
 
   # cat("\n Marginal Likelihoods computed....\n")
 
   for(i in 1:n){
     for(j in 1:m){
 
-      cat("\n Currently at:",j+(m*(i-1)),"/",n*m, "\n")
+      # cat("\n Currently at:",j+(m*(i-1)),"/",n*m, "\n")
 
       for(state in 1:numStates){
         if(MHChainOfConfigurations[i,j,1] == pottsStateSpace[state]){
@@ -78,7 +78,7 @@ nodeWisePMHSamplerToyRcpp <- function(imageData,
   # print(singleMarginalEstimateMatrix[,,2])
 
   for(k in 2:numberOfIterations){
-    cat("\n Currently at:",k,"/",numberOfIterations)
+    # cat("\n Currently at:",k,"/",numberOfIterations)
     for(i in 1:n){
       for(j in 1:m){
 
@@ -125,7 +125,7 @@ nodeWisePMHSamplerToyRcpp <- function(imageData,
         accRatio = (proposedNodeMarginalLikeli * proposedPottsConfigPrior) / (currMarginalLikelihoodMatrix[i, j] * currPottsConfigPrior)
         # cat("\n acceptance Ration:",accRatio)
         if(accRatio >= runif(1)){
-          if(DEBUG2){cat("\n Accepted")}
+          # if(DEBUG2){cat("\n Accepted")}
           currModelOrderMatrix[i, j] = proposedNodeModelOrder
           currMarginalLikelihoodMatrix[i, j] = proposedNodeMarginalLikeli
           MHChainOfEstimates[[i,j,k]] = list(modelOrder  = proposedNodeModelOrder,
@@ -135,7 +135,7 @@ nodeWisePMHSamplerToyRcpp <- function(imageData,
         }else{
           #Rejected
           MHChainOfEstimates[[i,j,k]] = MHChainOfEstimates[[i,j,k-1]]
-          if(DEBUG2){cat("\n Rejected")}
+          # if(DEBUG2){cat("\n Rejected")}
         }
       }
     }
@@ -156,11 +156,11 @@ toy_NWPM_SE <- function(imageData,
                         priorSigma = 5, likeSigma = 1,
                         SAVE_DIR = NULL
 ){
-  cat("\n smcParameters:", smcParameters$numSamples)
+  # cat("\n smcParameters:", smcParameters$numSamples)
   n = dim(imageData)[1]
   m = dim(imageData)[2]
 
-  cat("n:", n, "m:", m)
+  # cat("n:", n, "m:", m)
 
   currModelOrderMatrix = pottsGibbsSampler(numIteration = 10,n = n,m = m,J = J,stateSpace = pottsStateSpace)
 
@@ -173,13 +173,13 @@ toy_NWPM_SE <- function(imageData,
   SE_marginal_estimates  = array(NA,c(n,m,numStates))
   SE_smc_outputs = array(list(NULL), c(n,m,numStates))
 
-  cat("\n Computing marginal likelihoods using smc...")
+  # cat("\n Computing marginal likelihoods using smc...")
   # computing the marginal estimates for all model orders for all nodes of the image
   for(state in 1:numStates){
     for(i in 1:n){
       for(j in 1:m){
 
-        cat("\n Currently at:",j+(m*(i-1)),"/",n*m, "\n")
+        # cat("\n Currently at:",j+(m*(i-1)),"/",n*m, "\n")
         smcOuput = smcSamplerToyRcpp(numSamples = smcParameters$numSamples,
                                                                        numDistributions = smcParameters$numDistrbtns,
                                                                        datum = imageData[i,j],
@@ -208,7 +208,7 @@ toy_NWPM_SE <- function(imageData,
 
   print(currMarginalLikelihoodMatrix)
   for(k in 2:numberOfIterations){
-    cat("\n Currently at:",k,"/",numberOfIterations)
+    # cat("\n Currently at:",k,"/",numberOfIterations)
     for(i in 1:n){
       for(j in 1:m){
 
@@ -255,7 +255,7 @@ toy_NWPM_SE <- function(imageData,
         accRatio = (proposedNodeMarginalLikeli * proposedPottsConfigPrior) / (currMarginalLikelihoodMatrix[i, j] * currPottsConfigPrior)
         # cat("\n acceptance Ration:",accRatio)
         if(accRatio >= runif(1)){
-          if(DEBUG2){cat("\n Accepted")}
+          # if(DEBUG2){cat("\n Accepted")}
           currModelOrderMatrix[i, j] = proposedNodeModelOrder
           currMarginalLikelihoodMatrix[i, j] = proposedNodeMarginalLikeli
           # MHChainOfEstimates[[i,j,k]] = list(modelOrder  = proposedNodeModelOrder,
@@ -265,7 +265,7 @@ toy_NWPM_SE <- function(imageData,
         }else{
           #Rejected
           # MHChainOfEstimates[[i,j,k]] = MHChainOfEstimates[[i,j,k-1]]
-          if(DEBUG2){cat("\n Rejected")}
+          # if(DEBUG2){cat("\n Rejected")}
         }
       }
     }

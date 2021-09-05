@@ -6,7 +6,7 @@
 \alias{bayespetr-package}
 \title{bayespetr: Bayesian Analysis of PET Data (with Spatial Dependences)}
 \description{
-Monte Carlo (automated) methods for analysis of Positiron Emission Tomography
+NWPM and other Monte Carlo (automated) methods for analysis of Positiron Emission Tomography
     (PET) data. Specifically, for computing maringal likelihoods of
     Bayesian compartmental models; as well as a novel approach to 
     incorporating spatial dependence using the Potts model as a prior.

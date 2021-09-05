@@ -8,7 +8,7 @@ test_that("toy NWPM works", {
                                                                 numDistrbtns = 500),
                                            priorsigma = 5, likesigma = 1
   ){
-    cat("\n smcParameters:", smcParameters$numSamples)
+    # cat("\n smcParameters:", smcParameters$numSamples)
     n = dim(imageData)[1]
     m = dim(imageData)[2]
 
@@ -62,7 +62,7 @@ test_that("toy NWPM works", {
 
       }
     }
-    print(currMarginalLikelihoodMatrix)
+    # print(currMarginalLikelihoodMatrix)
     # stop("stopped")
     # print(singleMarginalEstimateMatrix[,,1])
     # print(singleMarginalEstimateMatrix[,,2])

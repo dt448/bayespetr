@@ -165,7 +165,7 @@ nodeWisePMHSamplerPETRcpp <- function(imageData,
         accRatio = (proposedNodeMarginalLikeli * proposedPottsConfigPrior) / (currMarginalLikelihoodMatrix[i, j] * currPottsConfigPrior)
         # cat("\n acceptance Ration:",accRatio)
         if(accRatio >= runif(1)){
-          if(DEBUG2){cat("\n Accepted")}
+          # if(DEBUG2){cat("\n Accepted")}
           currModelOrderMatrix[i, j] = proposedNodeModelOrder
           currMarginalLikelihoodMatrix[i, j] = proposedNodeMarginalLikeli
           MHChainOfEstimates[[i,j,k]] = list(modelOrder  = proposedNodeModelOrder,
@@ -175,7 +175,7 @@ nodeWisePMHSamplerPETRcpp <- function(imageData,
         }else{
           #Rejected
           MHChainOfEstimates[[i,j,k]] = MHChainOfEstimates[[i,j,k-1]]
-          if(DEBUG2){cat("\n Rejected")}
+          # if(DEBUG2){cat("\n Rejected")}
         }
       }
     }
@@ -310,12 +310,12 @@ nodeWisePMHSamplerPET <- function(imageData,
         accRatio = (proposedNodeMarginalLikeli * proposedPottsConfigPrior) / (currMarginalLikelihoodMatrix[i, j] * currPottsConfigPrior)
         # cat("\n acceptance Ration:",accRatio)
         if(accRatio >= runif(1)){
-          if(DEBUG2){cat("\n Accepted")}
+          # if(DEBUG2){cat("\n Accepted")}
           currModelOrderMatrix[i, j] = proposedNodeModelOrder
           currMarginalLikelihoodMatrix[i, j] = proposedNodeMarginalLikeli
         }else{
           #Rejected
-          if(DEBUG2){cat("\n Rejected")}
+          # if(DEBUG2){cat("\n Rejected")}
         }
       }
     }
@@ -412,12 +412,12 @@ nodeWisePMHApproxSamplerPET <- function(imageData,
         accRatio = (proposedNodeMarginalLikeli * proposedPottsConfigPrior) / (currMarginalLikelihoodMatrix[i, j] * currPottsConfigPrior)
         # cat("\n acceptance Ration:",accRatio)
         if(accRatio >= runif(1)){
-          if(DEBUG2){cat("\n Accepted")}
+          # if(DEBUG2){cat("\n Accepted")}
           currModelOrderMatrix[i, j] = proposedNodeModelOrder
           currMarginalLikelihoodMatrix[i, j] = proposedNodeMarginalLikeli
         }else{
           #Rejected
-          if(DEBUG2){cat("\n Rejected")}
+          # if(DEBUG2){cat("\n Rejected")}
         }
       }
     }

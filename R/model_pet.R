@@ -1,27 +1,27 @@
 input_fun_env <- new.env(parent = emptyenv())
-load("data/h01031_parentplasma_input.rda",input_fun_env)
-InputFun = splinefun(input_fun_env$h01031_parentplasma_input$time, input_fun_env$h01031_parentplasma_input$CP)
+# load("data/h01031_parentplasma_input.rda",input_fun_env)
+# InputFun = splinefun(input_fun_env$h01031_parentplasma_input$time, input_fun_env$h01031_parentplasma_input$CP)
 
 # InputFun = splinefun(SimulatedPlasmaInput$time, SimulatedPlasmaInput$CP)
 #plot(0:5500,InputFun(0:5500),type = 'l', xlab = "Time t (secs)", ylab = "Concentration (kBq/ml)")
 
-BasisFun <- function(x, uptime, theta){
-  exp(-theta * (uptime - x)) * InputFun(x)
-}
+# BasisFun <- function(x, uptime, theta){
+  # exp(-theta * (uptime - x)) * InputFun(x)
+# }
 
 #This is the tissue time-activity function.
-C_T = function(t,phiVec,thetaVec){
-  sum<-0
-  for(i in 1:length(phiVec)){
-    sum<- sum + abs(phiVec[i]*integrate(BasisFun, lower=0, upper=t,theta=thetaVec[i]
-                                        ,uptime=t,
-                                        subdivisions=1e8, stop.on.error=FALSE)$value)
+# C_T = function(t,phiVec,thetaVec){
+  # sum<-0
+  # for(i in 1:length(phiVec)){
+    # sum<- sum + abs(phiVec[i]*integrate(BasisFun, lower=0, upper=t,theta=thetaVec[i]
+                                        # ,uptime=t,
+                                        # subdivisions=1e8, stop.on.error=FALSE)$value)
     # if(DEBUG){cat('\n','C_T Summation', i ,' Element:',sum,'\n')} # prints out each element of the summation, used for debugging
-  }
+  # }
 
   # if(DEBUG){cat('\n','Final C_T Output:',sum,'\n')}
-  return(sum)
-}
+  # return(sum)
+# }
 
 
 # DEBUG = F
@@ -33,62 +33,62 @@ C_T = function(t,phiVec,thetaVec){
 #
 # plot(TimeFrame,ct,type = 'l', xlab = "Time t (secs)", ylab = "Concentration (kBq/ml)")
 
-#Use this function to simulate noisy (and noise-free) data
-dataSimltr = function(timeFrames,phi,theta,noiseLevel){
-
-  y = vector('numeric',length(timeFrames)-1)
-  ct = vector('numeric',length(timeFrames)-1)
-
-  for(i in 1:length(y)){
-    ct[i] = C_T(timeFrames[i+1],phi,theta)
-  }
-  deltaStar = timeFrames[(which(ct==max(ct))+1)]-timeFrames[which(ct==max(ct))]
-  kStar =deltaStar/ max(ct)
-  lambda = 1/(noiseLevel*kStar)
-
-  for(i in 1:length(y)){
-    y[i]= ct[i]+(sqrt(ct[i]/(timeFrames[i+1]-timeFrames[i]))*rnorm(1,0,sqrt(1/lambda)))
-  }
-  return (list (Y=y , C_T=ct,Lambda = lambda, B = log(lambda), kStar = kStar,TrueValues = c(phi,theta)))
-}
-
-
-Convolution <- function(theta, t){
-  abs(integrate(BasisFun, lower=0, upper=t, uptime=t, theta=theta,
-                subdivisions=1e8, stop.on.error=FALSE)$value)
-}
-
-convMatElem = function(theta,i){
-  #Optimized but extremely slow due to using sysdata, for testing only.
-  convVector = as.vector(t( convMat_Matrix ))
-  convVector[(theta*length(timeFrames))+i]
-}
-
-
-ComputeConv <- function(theta_a, theta_b, theta_step, timeFrames)
-{
-  Theta <- seq(theta_a, theta_b, theta_step)
-  m <- length(Theta)
-  convMul = m
-  n <- length(timeFrames)
-
-  ConvList <- list()
-
-  for (i in 1:n) {
-    cat("Time frame: ", i, "out of ", n,"\n")
-    tf <- timeFrames[i]
-    ConvList[[i]] <- parallel::mclapply(Theta, Convolution, t = tf)
-  }
-
-  ConvMat <- matrix(rep(0, m * n), ncol = n)
-  for (j in 1:n) {
-    for (i in 1:m) {
-      ConvMat[i,j] <- ConvList[[j]][[i]]
-    }
-  }
-
-  list(ConvMat=ConvMat, Theta=Theta, TimeFrames = timeFrames)
-}
+# Use this function to simulate noisy (and noise-free) data
+# dataSimltr = function(timeFrames,phi,theta,noiseLevel){
+#
+#   y = vector('numeric',length(timeFrames)-1)
+#   ct = vector('numeric',length(timeFrames)-1)
+#
+#   for(i in 1:length(y)){
+#     ct[i] = C_T(timeFrames[i+1],phi,theta)
+#   }
+#   deltaStar = timeFrames[(which(ct==max(ct))+1)]-timeFrames[which(ct==max(ct))]
+#   kStar =deltaStar/ max(ct)
+#   lambda = 1/(noiseLevel*kStar)
+#
+#   for(i in 1:length(y)){
+#     y[i]= ct[i]+(sqrt(ct[i]/(timeFrames[i+1]-timeFrames[i]))*rnorm(1,0,sqrt(1/lambda)))
+#   }
+#   return (list (Y=y , C_T=ct,Lambda = lambda, B = log(lambda), kStar = kStar,TrueValues = c(phi,theta)))
+# }
+#
+#
+# Convolution <- function(theta, t){
+#   abs(integrate(BasisFun, lower=0, upper=t, uptime=t, theta=theta,
+#                 subdivisions=1e8, stop.on.error=FALSE)$value)
+# }
+#
+# convMatElem = function(theta,i){
+#   #Optimized but extremely slow due to using sysdata, for testing only.
+#   convVector = as.vector(t( convMat_Matrix ))
+#   convVector[(theta*length(timeFrames))+i]
+# }
+#
+#
+# ComputeConv <- function(theta_a, theta_b, theta_step, timeFrames)
+# {
+#   Theta <- seq(theta_a, theta_b, theta_step)
+#   m <- length(Theta)
+#   convMul = m
+#   n <- length(timeFrames)
+#
+#   ConvList <- list()
+#
+#   for (i in 1:n) {
+#     cat("Time frame: ", i, "out of ", n,"\n")
+#     tf <- timeFrames[i]
+#     ConvList[[i]] <- parallel::mclapply(Theta, Convolution, t = tf)
+#   }
+#
+#   ConvMat <- matrix(rep(0, m * n), ncol = n)
+#   for (j in 1:n) {
+#     for (i in 1:m) {
+#       ConvMat[i,j] <- ConvList[[j]][[i]]
+#     }
+#   }
+#
+#   list(ConvMat=ConvMat, Theta=Theta, TimeFrames = timeFrames)
+# }
 
 ## THIS IS OUTDATED NEED TO BE FIXED
 # Lookup table generated using this code, timeFrames used are identical to simulation experiments.
